@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Python, daily: a course that fits your schedule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EEF6; --grid:#D8E0EE; --panel:#FBFCFE; --ink:#121C3A; --soft:#4B5878; --line:#C3CEE2;
+  --blue:#2446D8; --on-blue:#FFFFFF; --blue-soft:#DCE4FF;
+  --yellow:#FFD23F; --yellow-soft:#FFF0B3;
+  --green:#17855A; --green-soft:#D4F1E3; --red:#C0352F; --red-soft:#FADDDB;
+  --code-bg:#121C3A; --code-ink:#E8EEFF;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1326; --grid:#141E3A; --panel:#131C36; --ink:#E6ECFB; --soft:#9AA8C9; --line:#2A3760;
+    --blue:#7C96FF; --on-blue:#0C1326; --blue-soft:#1D2A5C;
+    --yellow:#FFD23F; --yellow-soft:#3A3310;
+    --green:#4CCB92; --green-soft:#10382B; --red:#FF7A72; --red-soft:#41181A;
+    --code-bg:#070C1A; --code-ink:#E8EEFF;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1326; --grid:#141E3A; --panel:#131C36; --ink:#E6ECFB; --soft:#9AA8C9; --line:#2A3760;
+  --blue:#7C96FF; --on-blue:#0C1326; --blue-soft:#1D2A5C;
+  --yellow:#FFD23F; --yellow-soft:#3A3310;
+  --green:#4CCB92; --green-soft:#10382B; --red:#FF7A72; --red-soft:#41181A;
+  --code-bg:#070C1A; --code-ink:#E8EEFF;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100%;background-color:var(--bg);color:var(--ink);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:32px 32px;
+  font-family:var(--serif);font-size:18px;line-height:1.65;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);line-height:1.12;letter-spacing:-.02em;margin:0}
+a{color:var(--blue)}
+code{font-family:var(--mono);font-size:.86em;background:var(--blue-soft);padding:.08em .35em;border-radius:4px}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-in{max-width:980px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:14px}
+.brand{font-family:var(--display);font-weight:800;font-size:1.25rem;letter-spacing:-.03em;background:none;border:0;padding:0;display:flex;align-items:center;gap:8px}
+.brand i{font-style:normal;display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;background:var(--yellow);color:#121C3A;font-family:var(--mono);font-size:.8rem;font-weight:600}
+.top .sp{flex:1}
+.mini{font-family:var(--display);font-size:.9rem;color:var(--soft);display:flex;align-items:center;gap:10px}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;min-width:90px}
+.bar>span{display:block;height:100%;background:var(--blue);border-radius:99px}
+
+main{max-width:980px;margin:0 auto;padding:28px 20px 80px}
+.narrow{max-width:700px;margin:0 auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-weight:700;font-size:1.02rem;padding:13px 22px;border-radius:10px;border:2px solid var(--blue);background:var(--blue);color:var(--on-blue);min-height:48px}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn.small{padding:8px 14px;font-size:.92rem;min-height:40px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.link{background:none;border:0;padding:0;color:var(--blue);text-decoration:underline;font-family:var(--display);font-weight:500;font-size:.95rem}
+.muted{color:var(--soft)}
+.fam{font-family:var(--display)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding:28px 0 10px}
+.hero h1{font-size:clamp(2.4rem,6vw,4rem);font-weight:800}
+.hero p.lead{font-size:1.2rem;margin:18px 0 26px;max-width:32em}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.codecard{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:22px 22px;font-family:var(--mono);font-size:.86rem;line-height:1.75;overflow-x:auto;border:1px solid var(--line)}
+.codecard .cm{color:#8694B8;font-style:italic}.codecard .k{color:#8FB0FF}.codecard .s{color:#8EE3B0}.codecard .n{color:#FFB07A}.codecard .b{color:#FFD23F}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:56px;border-top:2px solid var(--ink)}
+.facts div{padding:18px 20px 0 0}
+.facts h3{font-size:1.1rem;margin-bottom:6px}
+.facts p{margin:0;font-size:.98rem;color:var(--soft)}
+.stamp{display:inline-block;margin-top:26px;font-family:var(--display);font-size:.92rem;background:var(--yellow-soft);border:1px solid var(--yellow);padding:6px 12px;border-radius:8px}
+
+/* panels */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:26px 28px}
+.panel+.panel{margin-top:18px}
+h2.t{font-size:clamp(1.7rem,4vw,2.3rem);margin-bottom:10px}
+h3.s{font-size:1.15rem;margin:0 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 24px}
+.chip{font-family:var(--display);font-weight:500;font-size:1rem;background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:10px 16px;min-height:44px}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft);font-weight:700}
+
+/* quiz */
+.qwrap{max-width:700px;margin:0 auto}
+.qmeta{display:flex;justify-content:space-between;align-items:center;font-family:var(--display);color:var(--soft);font-size:.95rem;margin-bottom:10px}
+.qtext{font-family:var(--display);font-weight:700;font-size:1.45rem;line-height:1.25;margin:22px 0 14px}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opt{text-align:left;background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:13px 16px;font-family:var(--serif);font-size:1.02rem;line-height:1.4;min-height:48px;display:flex;gap:12px;align-items:flex-start}
+.opt:hover{border-color:var(--ink)}
+.opt .ix{font-family:var(--mono);font-size:.82rem;color:var(--soft);padding-top:3px;min-width:1.2em}
+.opt.ok{border-color:var(--green);background:var(--green-soft)}
+.opt.bad{border-color:var(--red);background:var(--red-soft)}
+.opt.dunno{border-style:dashed;color:var(--soft)}
+.fb{margin-top:12px;padding:12px 14px;border-radius:8px;font-size:.98rem;line-height:1.5}
+.fb.ok{background:var(--green-soft);border-left:4px solid var(--green)}
+.fb.bad{background:var(--red-soft);border-left:4px solid var(--red)}
+
+/* code */
+pre.code{margin:16px 0;background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:16px 18px;overflow-x:auto;font-family:var(--mono);font-size:.88rem;line-height:1.65;tab-size:4}
+pre.code code{background:none;padding:0;font-size:inherit;color:inherit}
+pre.code.sh{border-left:4px solid var(--yellow)}
+pre.code.sh::before{content:"terminal";display:block;font-size:.72rem;color:#8694B8;margin-bottom:6px}
+.t-c{color:#8694B8;font-style:italic}.t-k{color:#8FB0FF}.t-s{color:#8EE3B0}.t-n{color:#FFB07A}.t-b{color:#FFD23F}
+
+/* setup */
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}
+.check:first-of-type{border-top:0}
+.check input{width:22px;height:22px;margin-top:4px;accent-color:var(--blue)}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:8px 0 6px}
+.summary b{display:block;font-family:var(--display);font-size:1.9rem;line-height:1.1}
+.summary span{font-size:.92rem;color:var(--soft)}
+
+/* plan */
+.next{background:var(--ink);color:var(--bg);border-radius:14px;padding:26px 28px;display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.next h2{font-size:1.7rem;margin:4px 0 6px;color:var(--bg)}
+.next p{margin:0;opacity:.85}
+.next .btn{background:var(--yellow);border-color:var(--yellow);color:#121C3A}
+.sessions{margin-top:26px;border-top:2px solid var(--ink)}
+.srow{display:grid;grid-template-columns:86px 1fr auto;gap:16px;align-items:start;padding:16px 4px;border-bottom:1px solid var(--line);width:100%;text-align:left;background:none;border-left:0;border-right:0;border-top:0;border-radius:0}
+.srow:hover{background:var(--panel)}
+.sn{font-family:var(--display);font-weight:800;font-size:1.05rem}
+.sd{display:block;font-family:var(--display);font-weight:500;font-size:.85rem;color:var(--soft)}
+.srow ul{margin:0;padding-left:1.1em;font-size:.98rem}
+.srow li.done{color:var(--soft);text-decoration:line-through}
+.state{font-family:var(--display);font-size:.85rem;padding:4px 10px;border-radius:99px;background:var(--line);white-space:nowrap}
+.state.done{background:var(--green-soft);color:var(--green)}
+.state.now{background:var(--yellow);color:#121C3A;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:22px 0 4px}
+.stats b{font-family:var(--display);font-size:1.6rem;display:block;line-height:1.1}
+.stats span{font-size:.9rem;color:var(--soft)}
+
+/* lesson */
+.lesson{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:30px 32px;margin-top:22px}
+.lesson .mod{font-family:var(--display);font-size:.95rem;color:var(--soft);margin:0 0 4px}
+.lesson h2{font-size:2rem;margin-bottom:4px}
+.lesson .time{font-family:var(--display);font-size:.92rem;color:var(--soft)}
+.prose{max-width:66ch}
+.prose p{margin:0 0 1em}
+.prose h3{font-size:1.25rem;margin:1.6em 0 .5em}
+.prose ul{margin:0 0 1em;padding-left:1.2em}
+.prose li{margin:.25em 0}
+.tip{background:var(--yellow-soft);border-left:4px solid var(--yellow);padding:12px 16px;border-radius:0 8px 8px 0;margin:1.2em 0;font-size:.98rem}
+.task{border:2px dashed var(--blue);border-radius:10px;padding:16px 18px;margin-top:24px}
+.task h3{font-size:1.1rem;margin-bottom:6px}
+.check-block{margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.check-block .qtext{font-size:1.15rem;margin:14px 0 4px}
+.donebar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.warm{background:var(--blue-soft);border-radius:12px;padding:20px 26px;margin-top:22px}
+.win{background:var(--green-soft);border:2px solid var(--green);border-radius:12px;padding:22px 26px;margin-top:26px}
+.win h3{font-size:1.4rem;margin-bottom:6px}
+.crumbs{font-family:var(--display);font-size:.95rem;margin-bottom:6px}
+details.skipped{margin-top:30px}
+details.skipped summary{font-family:var(--display);font-weight:700;cursor:pointer;padding:6px 0}
+.tools{display:flex;flex-wrap:wrap;gap:16px;margin-top:40px;padding-top:18px;border-top:1px solid var(--line)}
+footer{max-width:980px;margin:0 auto;padding:10px 20px 40px;color:var(--soft);font-size:.9rem;font-family:var(--display)}
+@media (max-width:760px){
+  body{font-size:17px}
+  .hero{grid-template-columns:1fr;gap:26px}
+  .facts,.summary,.stats{grid-template-columns:1fr}
+  .srow{grid-template-columns:1fr;gap:6px}
+  .lesson{padding:22px 18px}
+  .panel{padding:20px 18px}
+  .mini .bar{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <button class="brand" data-a="home" aria-label="Python, daily home"><i>py</i>Python, daily</button>
+  <span class="sp"></span>
+  <div class="mini" id="mini"></div>
+</div></header>
+<main id="app"></main>
+<footer>Progress is saved in this browser only. Content reviewed October 2026 for Python 3.14, the current stable release. Python 3.15 is scheduled for this month, and everything here still applies.</footer>
+
+<script>
+/* ============ DATA ============ */
+const TOPICS=[
+ {id:'pc',name:'How computers work',skip:true},
+ {id:'basics',name:'Python basics',skip:true},
+ {id:'flow',name:'Decisions and loops',skip:true},
+ {id:'data',name:'Lists, dictionaries and friends',skip:true},
+ {id:'funcs',name:'Functions and modules',skip:true},
+ {id:'real',name:'Real-world Python',skip:false},
+ {id:'oop',name:'Objects and types',skip:false},
+ {id:'modern',name:'Modern Python and next steps',skip:false},
+ {id:'capstone',name:'Capstone project',skip:false}
+];
+const TN=Object.fromEntries(TOPICS.map(t=>[t.id,t.name]));
+
+const PLACEMENT=[
+ {id:'p1',t:'pc',q:'Which part of a computer forgets everything when you turn it off?',o:['Memory (RAM)','The SSD or hard drive','Your saved files','The operating system'],a:0},
+ {id:'p2',t:'pc',q:'What does a file path like /Users/sam/notes/todo.txt describe?',o:['How big the file is','Where the file lives, through nested folders','A website address','The file password'],a:1},
+ {id:'p3',t:'pc',q:'What is a terminal (also called the command line)?',o:['A text window where you type commands to the computer','A special keyboard','A kind of web browser','A virus scanner'],a:0},
+ {id:'p4',t:'basics',q:'What does this program print?',code:'x = 5\ny = x + 2\nprint(y)',o:['5','7','x + 2','It causes an error'],a:1},
+ {id:'p5',t:'basics',q:'What does this print?',code:'print("3" + "4")',o:['7','34','It causes an error','"3" + "4"'],a:1},
+ {id:'p6',t:'basics',q:'Which line correctly stores the text Ada in a variable?',o:['name = "Ada"','"Ada" = name','name == "Ada"','name <- "Ada"'],a:0},
+ {id:'p7',t:'flow',q:'What does this print?',code:'for i in range(3):\n    print(i)',o:['1 2 3 (one per line)','0 1 2 (one per line)','0 1 2 3 (one per line)','1 2 (one per line)'],a:1},
+ {id:'p8',t:'flow',q:'What does this print?',code:'n = 7\nif n > 10:\n    print("big")\nelif n > 5:\n    print("medium")\nelse:\n    print("small")',o:['big','medium','small','medium and small'],a:1},
+ {id:'p9',t:'data',q:'What does this print?',code:'nums = [10, 20, 30]\nprint(nums[1])',o:['10','20','30','It causes an error'],a:1},
+ {id:'p10',t:'data',q:'How many items are in ages at the end?',code:'ages = {"ann": 31}\nages["bob"] = 25\nprint(len(ages))',o:['1','2','3','It causes an error'],a:1},
+ {id:'p11',t:'funcs',q:'What does this print?',code:'def double(n):\n    return n * 2\n\nprint(double(4))',o:['4','8','double(4)','None'],a:1},
+ {id:'p12',t:'funcs',q:'What does the return keyword do in a function?',o:['Sends a value back to the caller and ends the function','Prints the value on screen','Creates a new function','Loads a module'],a:0},
+ {id:'p13',t:'real',q:'What does this print?',code:'try:\n    n = int("abc")\nexcept ValueError:\n    print("oops")',o:['oops','The program crashes','abc','Nothing'],a:0},
+ {id:'p14',t:'oop',q:'What does this print?',code:'class Dog:\n    def __init__(self, name):\n        self.name = name\n\nd = Dog("Rex")\nprint(d.name)',o:['Dog','Rex','name','It causes an error'],a:1},
+ {id:'p15',t:'modern',q:'In def greet(name: str) -> str, what does : str do?',o:['Converts name to a string','Hints the expected type; Python itself does not enforce it','Creates a string variable','Causes an error'],a:1}
+];
+
+const Q=(q,o,a,w,code)=>({q,o,a,w,code});
+const L=(id,topic,title,min,body,checks,task,sol,always)=>({id,topic,title,min,body,checks,task,sol,always:!!always});
+
+const LESSONS=[
+/* ---------- How computers work ---------- */
+L('pc1','pc','What a computer actually does',10,String.raw`
+A computer follows instructions, very fast. Four parts matter to a programmer:
+
+- **The CPU** is the worker. It follows instructions one after another.
+- **Memory (RAM)** is the short-term workspace. It is fast, and it empties when the power goes off.
+- **Storage (SSD)** is long-term. Your files live here and stay put.
+- **The operating system** (Windows, macOS, Linux) is the manager. It runs programs and hands them the screen, files and network.
+
+## Programs and code
+A program is a list of instructions. People write **source code**, which is plain text. The CPU can't read that directly, so something has to translate it.
+
+Python uses an **interpreter**: a program that reads your text file and carries out what it says, line by line.
+
+>> You don't need to memorize hardware. Keep one picture in mind: code is text, the interpreter runs it, it uses memory while it runs, and it saves results to storage.
+`,[
+ Q('Which one forgets everything when the computer is turned off?',['Memory (RAM)','Storage (SSD)','Your saved files','The operating system'],0,'RAM is the short-term workspace. Storage keeps files after shutdown.'),
+ Q('What does the Python interpreter do?',['Reads your code and carries out its instructions','Makes your computer faster','Stores your files','Connects you to Wi-Fi'],0,'The interpreter is the translator and runner for your Python source code.')
+],'In one sentence of your own words, explain the difference between memory and storage. There is no single right wording; the point is to say it without looking.'),
+
+L('pc2','pc','Files, folders and the terminal',15,String.raw`
+Files live inside folders, and folders live inside other folders. A **path** is the address of a file:
+
+~~~txt
+macOS / Linux:  /Users/sam/Documents/notes.txt
+Windows:        C:\Users\Sam\Documents\notes.txt
+~~~
+
+The end of a file name, like ~.py~ or ~.txt~, is its **extension**. Python files end in ~.py~.
+
+## The terminal
+The **terminal** is a window where you type commands instead of clicking. Programmers use it constantly because it is fast and exact. On Windows, search for **PowerShell** or **Terminal**. On macOS, open **Terminal**.
+
+Four commands cover most of what you need:
+
+- ~cd folder~ moves into a folder, and ~cd ..~ moves up one level
+- ~ls~ lists what is in the current folder (~dir~ also works on Windows)
+- ~mkdir name~ makes a new folder
+- ~pwd~ prints where you are (macOS and Linux; Windows PowerShell uses ~pwd~ too)
+
+~~~sh
+cd Documents
+mkdir python-course
+cd python-course
+~~~
+
+>> The terminal can't hurt you just by being open. Be careful only with delete commands (~rm~, ~del~), because they skip the recycle bin.
+`,[
+ Q('What does cd .. do?',['Moves up one folder','Deletes the current folder','Creates a folder named ..','Lists all files'],0,'Two dots mean the parent folder, so cd .. goes up one level.'),
+ Q('Which is a correct name for a Python file?',['hello.py','hello.pyt','hello.python','python.hello'],0,'Python source files use the .py extension.')
+],'Open your terminal. Create a folder called python-course inside your Documents folder and move into it. Then run pwd (or cd on older Windows shells) to confirm where you are.'),
+
+L('pc3','pc','Installing Python and an editor',20,String.raw`
+First, check whether Python is already installed. Open your terminal and type:
+
+~~~sh
+python --version
+~~~
+
+On macOS and Linux you may need ~python3 --version~ instead. You want **Python 3.14 or newer**. Python 3.13 works fine too. Avoid anything older than 3.11, and note that Python 3.10 reaches end of life in October 2026.
+
+## Installing
+- **Simple route:** download the installer from python.org/downloads. On Windows, tick **Add python.exe to PATH** on the first screen.
+- **Modern route:** ~uv~ is a fast tool that installs Python versions and manages projects. After installing uv, ~uv python install 3.14~ fetches Python for you.
+
+## An editor
+Use **VS Code** with its Python extension, or **PyCharm**. Both are free and both highlight mistakes as you type.
+
+## Your first run
+Create a file named ~hello.py~ with this single line:
+
+~~~
+print("Hello, world!")
+~~~
+
+Then run it from the folder that contains it:
+
+~~~sh
+python hello.py
+~~~
+
+## The interactive prompt
+Typing just ~python~ opens the **REPL**, a live prompt marked ~>>>~. Type a line, press Enter, and Python answers immediately. It's perfect for quick experiments. Type ~exit()~ to leave. Recent versions add colour and let you paste several lines at once.
+`,[
+ Q('Which Python should a new learner install today?',['Python 2.7','The newest Python 3 (3.14 or later)','Python 3.6','Any version works the same'],1,'Python 2 ended in 2020. Older 3.x versions lose security support over time, so use a current one.'),
+ Q('You type python and see >>> on the screen. What is it?',['The interactive REPL, where you type Python and get instant answers','An error message','The code editor','A Windows activation prompt'],0,'>>> is the REPL prompt. Type exit() to leave.')
+],'Create hello.py, run it, then change it so it greets you by name and run it again.','print("Hello, Sam!")'),
+
+/* ---------- Python basics ---------- */
+L('b1','basics','Your first programs: print and comments',15,String.raw`
+The ~print()~ function shows something on screen. Text goes in quotes. Numbers don't.
+
+~~~
+print("Hello, world!")
+print("Python", "is", "fun")
+print(2 + 3)
+~~~
+
+Output:
+
+~~~txt
+Hello, world!
+Python is fun
+5
+~~~
+
+Text in quotes is called a **string**. The string ~"2 + 3"~ prints as written, but the bare expression ~2 + 3~ gets calculated first.
+
+## Comments
+Anything after ~#~ is ignored by Python. Use comments to explain why, not what.
+
+~~~
+# This line is for humans only
+print("Done")  # this part too
+~~~
+
+## Reading mistakes
+Python is case-sensitive, so ~Print~ is not ~print~. If you forget a closing quote, Python stops and points at the line. Read the message; it is usually trying to help.
+`,[
+ Q('What does this print?',['2 + 3','5','It causes an error','print'],0,'Inside quotes it is just text, so Python prints it exactly as written.','print("2 + 3")'),
+ Q('What does the # symbol do?',['Starts a comment that Python ignores','Prints a number','Starts a loop','Multiplies two numbers'],0,'Everything after # on that line is skipped by Python.')
+],'Write a program that prints three lines: your name, your city, and your favourite food.','print("Sam")\nprint("Lisbon")\nprint("Pasta")'),
+
+L('b2','basics','Variables and types',15,String.raw`
+A **variable** is a name attached to a value, like a label on a box.
+
+~~~
+name = "Ada"
+age = 36
+height = 1.65
+is_student = False
+print(name, age)
+~~~
+
+The single ~=~ means **assign**: put the value on the right into the name on the left. It does not mean "equals" as in maths.
+
+~~~
+score = 10
+score = score + 5
+print(score)   # 15
+~~~
+
+## The four basic types
+- ~int~ for whole numbers: ~42~
+- ~float~ for decimals: ~3.14~
+- ~str~ for text: ~"hi"~
+- ~bool~ for ~True~ or ~False~
+
+Ask Python the type with ~type(age)~.
+
+## Naming rules
+Use lowercase words joined with underscores (~total_price~). Names can't start with a digit, can't contain spaces, and can't be reserved words such as ~for~ or ~class~.
+`,[
+ Q('Which is a valid variable name?',['my_score','2nd_place','my score','for'],0,'Names cannot start with a digit, contain spaces, or be reserved words.'),
+ Q('What does type(3.0) give?',['int','float','str','bool'],1,'A number with a decimal point is a float, even when it ends in .0.')
+],'Create variables for your name, age and height. Print them on one line with print(name, age, height).','name = "Sam"\nage = 29\nheight = 1.78\nprint(name, age, height)'),
+
+L('b3','basics','Numbers and math',12,String.raw`
+Python works as a calculator.
+
+~~~
+print(7 + 2)    # 9
+print(7 - 2)    # 5
+print(7 * 2)    # 14
+print(7 / 2)    # 3.5  (division always gives a float)
+print(7 // 2)   # 3    (floor division)
+print(7 % 2)    # 1    (remainder)
+print(2 ** 10)  # 1024 (power)
+~~~
+
+The remainder operator ~%~ looks odd but is very useful. ~n % 2 == 0~ is a quick test for even numbers.
+
+Normal maths order applies, and parentheses override it: ~(1 + 2) * 3~ is 9.
+
+## Shortcuts
+~~~
+coins = 5
+coins += 2   # same as coins = coins + 2
+~~~
+
+## A famous gotcha
+Computers store decimals in binary, so tiny errors appear:
+
+~~~
+print(0.1 + 0.2)  # 0.30000000000000004
+print(round(0.1 + 0.2, 2))  # 0.3
+~~~
+
+This happens in every language. Use ~round()~ when you display money or measurements.
+`,[
+ Q('What is 17 // 5?',['3','3.4','2','4'],0,'// divides and drops the decimal part. 17 divided by 5 is 3.4, so the result is 3.'),
+ Q('What is 10 % 3?',['3','1','0','3.33'],1,'The remainder after dividing 10 by 3 is 1.')
+],'Tip calculator: a bill is 48.50 and the tip is 18%. Print the tip and the total, rounded to 2 decimals.','bill = 48.50\ntip = bill * 0.18\ntotal = bill + tip\nprint(round(tip, 2), round(total, 2))  # 8.73 57.23'),
+
+L('b4','basics','Text: strings and f-strings',15,String.raw`
+Strings can use single or double quotes. Join them with ~+~, or better, use an **f-string**: put ~f~ before the quote and write variables inside ~{ }~.
+
+~~~
+name = "Ada Lovelace"
+print(f"Hello, {name}!")
+print(f"{name} has {len(name)} letters")
+~~~
+
+## Useful tools
+~~~
+print(name.upper())        # ADA LOVELACE
+print(name.lower())        # ada lovelace
+print(name.replace("Ada", "Augusta"))
+print("  hi  ".strip())     # hi
+~~~
+
+## Positions and slices
+Counting starts at **0**. Negative numbers count from the end.
+
+~~~
+print(name[0])    # A
+print(name[-1])   # e
+print(name[0:3])  # Ada  (start included, end excluded)
+print(name[:3])   # Ada
+~~~
+
+Strings can't be changed in place. Methods like ~.upper()~ give you a new string instead.
+
+For several lines, use triple quotes: ~"""line one and line two"""~.
+`,[
+ Q('What does word[1:4] give?',['pyt','yth','ytho','tho'],1,'Slices start at index 1 (y) and stop before index 4, giving y, t, h.','word = "python"\nprint(word[1:4])'),
+ Q('What does this print?',['{x} + {x}','3 + 3','x + x','Error'],1,'The f-string replaces each {x} with the value of x.','x = 3\nprint(f"{x} + {x}")')
+],'Store your name and birth year in variables. Print a sentence with an f-string that says how old you will turn this year (use 2026 - year).','name = "Sam"\nyear = 1997\nprint(f"{name} turns {2026 - year} this year.")'),
+
+L('b5','basics','Getting input and converting types',12,String.raw`
+~input()~ asks the user to type something. It **always returns text**, even if they type digits.
+
+~~~
+name = input("Your name? ")
+print(f"Nice to meet you, {name}")
+~~~
+
+To do maths with typed numbers, convert the text:
+
+~~~
+age = int(input("Your age? "))
+print(f"Next year you will be {age + 1}")
+~~~
+
+- ~int("42")~ gives 42
+- ~float("3.5")~ gives 3.5
+- ~str(99)~ gives "99"
+
+## A common error
+~~~txt
+TypeError: can only concatenate str (not "int") to str
+~~~
+
+That means you mixed text and a number, like ~"age: " + 5~. Convert one of them, or use an f-string.
+`,[
+ Q('What type does input() always return?',['int','str','float','It depends on what you type'],1,'Everything typed is text. Convert with int() or float() when you need a number.'),
+ Q('What is int("42") + 1?',['"421"','43','Error','42 + 1'],1,'int("42") turns the text into the number 42, and 42 + 1 is 43.')
+],'Ask the user for two numbers and print their sum.','a = float(input("First number: "))\nb = float(input("Second number: "))\nprint(f"Sum: {a + b}")'),
+
+L('b6','basics','True, False and comparisons',12,String.raw`
+Comparisons give a **bool**: ~True~ or ~False~.
+
+~~~
+print(5 > 3)    # True
+print(5 == 5)   # True  (two equals signs compare)
+print(5 != 5)   # False
+print(3 <= 2)   # False
+~~~
+
+**Important:** ~=~ assigns a value, ~==~ compares two values. Mixing them up is the classic beginner slip.
+
+## Combining conditions
+~~~
+age = 20
+has_ticket = True
+print(age >= 18 and has_ticket)   # True
+print(age < 13 or age > 65)       # False
+print(not has_ticket)             # False
+~~~
+
+## Checking membership
+~~~
+print("a" in "banana")   # True
+print(5 in [1, 2, 3])    # False
+~~~
+
+## Truthiness
+Empty things count as false: ~0~, ~""~, ~[]~, ~None~. Almost everything else counts as true.
+`,[
+ Q('What does 5 == "5" give?',['True','False','Error','5'],1,'A number and a piece of text are different things, so they are not equal.'),
+ Q('What does (3 > 2) and not (1 > 2) give?',['True','False','Error','None'],0,'3 > 2 is True. 1 > 2 is False, and not False is True. True and True is True.')
+],'Ask for an age and print whether the person can vote (age >= 18) by printing the comparison itself.','age = int(input("Age: "))\nprint(age >= 18)'),
+
+/* ---------- Decisions and loops ---------- */
+L('f1','flow','Decisions with if, elif and else',15,String.raw`
+Programs get interesting when they choose.
+
+~~~
+temp = 18
+if temp >= 25:
+    print("hot")
+elif temp >= 15:
+    print("nice")
+else:
+    print("cold")
+~~~
+
+Three rules:
+
+- End the ~if~ line with a colon ~:~
+- **Indent** the block beneath it (4 spaces is the standard)
+- Python checks top to bottom and runs only the **first** block that is true
+
+## Separate ifs are separate questions
+~~~
+x = 5
+if x > 3:
+    print("A")
+if x > 4:
+    print("B")
+~~~
+
+This prints both A and B. With ~elif~ only one branch can win.
+
+## Nesting and combining
+~~~
+if age >= 18 and has_id:
+    print("Welcome")
+~~~
+
+Indentation is how Python knows where a block ends. A missing or uneven indent gives an ~IndentationError~.
+`,[
+ Q('What prints?',['A only','A and B','A, B and C','B only'],1,'Two separate ifs: x > 4 is True so B prints, and the else belongs to that second if, so C does not.','x = 5\nif x > 3:\n    print("A")\nif x > 4:\n    print("B")\nelse:\n    print("C")'),
+ Q('What marks the body of an if block in Python?',['Indentation','Curly braces','The word end','Semicolons'],0,'Python uses indentation instead of braces.')
+],'Write a grade converter: ask for a score (0-100) and print A for 90+, B for 80+, C for 70+, otherwise "Keep going".','score = int(input("Score: "))\nif score >= 90:\n    print("A")\nelif score >= 80:\n    print("B")\nelif score >= 70:\n    print("C")\nelse:\n    print("Keep going")'),
+
+L('f2','flow','while loops',12,String.raw`
+A ~while~ loop repeats as long as its condition stays true.
+
+~~~
+count = 3
+while count > 0:
+    print(count)
+    count -= 1
+print("Liftoff!")
+~~~
+
+Output: 3, 2, 1, Liftoff! (each on its own line).
+
+The loop needs something that eventually makes the condition false. Forget ~count -= 1~ and it runs forever, which is called an **infinite loop**. Press **Ctrl+C** in the terminal to stop it.
+
+## Repeat until valid
+~while~ is perfect when you don't know how many repeats you need:
+
+~~~
+password = ""
+while password != "python":
+    password = input("Password: ")
+print("Access granted")
+~~~
+`,[
+ Q('How many times does the loop body run?',['2','3','4','Forever'],1,'i goes 0, 1, 2 and stops when it reaches 3, so the body runs three times.','i = 0\nwhile i < 3:\n    i += 1'),
+ Q('How do you stop a runaway program in the terminal?',['Ctrl+C','Ctrl+S','Close the keyboard','Type stop'],0,'Ctrl+C sends an interrupt that stops the program.')
+],'Make a guessing game: the secret number is 7. Keep asking until the user guesses it, then print "Got it!".','secret = 7\nguess = 0\nwhile guess != secret:\n    guess = int(input("Guess: "))\nprint("Got it!")'),
+
+L('f3','flow','for loops and range',15,String.raw`
+A ~for~ loop walks through items one at a time.
+
+~~~
+for letter in "cat":
+    print(letter)
+
+for fruit in ["apple", "pear"]:
+    print(fruit)
+~~~
+
+## Counting with range
+~~~
+for i in range(5):        # 0, 1, 2, 3, 4
+    print(i)
+for i in range(1, 6):     # 1, 2, 3, 4, 5
+    print(i)
+for i in range(0, 10, 2): # 0, 2, 4, 6, 8
+    print(i)
+~~~
+
+~range(stop)~ stops **before** the stop value. That's the same rule as slicing.
+
+## Adding things up
+~~~
+total = 0
+for n in range(1, 4):
+    total += n
+print(total)   # 6
+~~~
+
+This pattern (start with an empty value, update inside the loop) appears in nearly every program.
+`,[
+ Q('What does list(range(2, 8, 2)) give?',['[2, 4, 6]','[2, 4, 6, 8]','[2, 3, 4, 5, 6, 7]','[4, 6, 8]'],0,'Start at 2, step by 2, stop before 8.'),
+ Q('What is total after this loop?',['3','6','10','0'],1,'1 + 2 + 3 = 6. range(1, 4) gives 1, 2, 3.','total = 0\nfor n in range(1, 4):\n    total += n')
+],'Print the 7 times table from 1 to 10, one line each, like "7 x 3 = 21".','for i in range(1, 11):\n    print(f"7 x {i} = {7 * i}")'),
+
+L('f4','flow','break, continue and loop patterns',12,String.raw`
+Two keywords give you finer control:
+
+- ~break~ leaves the loop immediately
+- ~continue~ skips to the next round
+
+~~~
+for i in range(5):
+    if i == 3:
+        break
+    print(i)      # prints 0 1 2
+
+for i in range(5):
+    if i == 2:
+        continue
+    print(i)      # prints 0 1 3 4
+~~~
+
+## Patterns worth knowing
+**Counting** how many items match:
+
+~~~
+count = 0
+for n in range(1, 21):
+    if n % 3 == 0:
+        count += 1
+print(count)   # 6
+~~~
+
+**Finding the biggest:**
+
+~~~
+biggest = 0
+for n in [4, 9, 2]:
+    if n > biggest:
+        biggest = n
+~~~
+
+>> When a loop misbehaves, add a temporary ~print()~ inside it to see the values changing. It's the oldest debugging trick and it still works.
+`,[
+ Q('What does continue do?',['Skips the rest of this round and moves to the next','Stops the loop','Restarts the program','Prints the value'],0,'continue jumps to the next iteration.'),
+ Q('What does this print?',['0 1 2','0 1 2 3','3 4','0 1 2 3 4'],0,'The loop stops with break as soon as i reaches 3.','for i in range(5):\n    if i == 3:\n        break\n    print(i)')
+],'Add up only the even numbers from 1 to 20 (the answer is 110).','total = 0\nfor n in range(1, 21):\n    if n % 2 == 0:\n        total += n\nprint(total)'),
+
+/* ---------- Data ---------- */
+L('d1','data','Lists',15,String.raw`
+A **list** holds many values in order.
+
+~~~
+fruits = ["apple", "banana"]
+fruits.append("cherry")
+print(fruits[0])      # apple
+print(fruits[-1])     # cherry
+print(len(fruits))    # 3
+~~~
+
+## Changing lists
+~~~
+fruits.insert(1, "kiwi")   # add at position 1
+fruits.remove("banana")    # remove by value
+last = fruits.pop()        # remove and return the last item
+fruits.sort()              # sort in place
+print(sorted(fruits))      # a new sorted list
+~~~
+
+Lists are **mutable**: you can change them after creating them. They can hold anything, even other lists.
+
+## Looping and searching
+~~~
+for f in fruits:
+    print(f)
+
+print("apple" in fruits)   # True or False
+~~~
+
+Slicing works exactly like strings: ~fruits[1:3]~.
+`,[
+ Q('What does this print?',['3','4','9','Error'],1,'The list starts with three items, and append adds a fourth.','nums = [3, 1, 2]\nnums.append(9)\nprint(len(nums))'),
+ Q('What is [4, 5, 6][-1]?',['4','5','6','Error'],2,'-1 means the last item.')
+],'Start a shopping list with 3 items, add a fourth, remove one, then print the sorted list.','items = ["milk", "eggs", "rice"]\nitems.append("tea")\nitems.remove("eggs")\nprint(sorted(items))'),
+
+L('d2','data','Tuples and sets',10,String.raw`
+## Tuples
+A **tuple** is like a list that can't change. Use it for small fixed groups such as coordinates.
+
+~~~
+point = (3, 4)
+x, y = point        # unpacking
+print(x, y)         # 3 4
+~~~
+
+Python functions often return tuples, and unpacking makes that tidy.
+
+## Sets
+A **set** holds unique values with no order. Duplicates vanish.
+
+~~~
+tags = {"python", "code", "python"}
+print(tags)              # {'python', 'code'} (order may vary)
+print("code" in tags)    # True, and very fast
+~~~
+
+Sets also do maths:
+
+~~~
+a = {1, 2, 3}
+b = {3, 4}
+print(a & b)   # {3}         in both
+print(a | b)   # {1, 2, 3, 4} in either
+~~~
+
+>> An empty set is ~set()~. Plain ~{}~ makes an empty dictionary, which you'll meet next.
+`,[
+ Q('What is len({1, 1, 2})?',['3','2','1','Error'],1,'Sets keep unique values, so the two 1s collapse to one.'),
+ Q('What is the main difference between a tuple and a list?',['A tuple cannot be changed after creation','A tuple is faster to type','A tuple only holds numbers','There is none'],0,'Tuples are immutable.')
+],'Remove the duplicates from [3, 1, 3, 2, 1] and print the result sorted.','print(sorted(set([3, 1, 3, 2, 1])))  # [1, 2, 3]'),
+
+L('d3','data','Dictionaries',15,String.raw`
+A **dictionary** stores pairs: a key points to a value. It's how you label data.
+
+~~~
+person = {"name": "Ada", "age": 36}
+print(person["name"])      # Ada
+person["city"] = "London"  # add
+person["age"] = 37         # update
+del person["city"]         # delete
+~~~
+
+## Safe reading
+A missing key raises a ~KeyError~. ~.get()~ returns a default instead:
+
+~~~
+print(person.get("email", "none"))   # none
+~~~
+
+## Looping
+~~~
+for key, value in person.items():
+    print(key, value)
+
+print("name" in person)    # True (checks keys)
+~~~
+
+## Counting with a dictionary
+~~~
+counts = {}
+for ch in "hello":
+    counts[ch] = counts.get(ch, 0) + 1
+print(counts)   # {'h': 1, 'e': 1, 'l': 2, 'o': 1}
+~~~
+
+Dictionaries keep the order you inserted items in.
+`,[
+ Q('What does this print?',['None','0','Error','b'],1,'.get returns the default you supply when the key is missing.','d = {"a": 1}\nprint(d.get("b", 0))'),
+ Q('What happens with d["zzz"] when the key does not exist?',['Returns None','Raises a KeyError','Returns 0','Adds the key'],1,'Direct access to a missing key raises KeyError. Use .get() to be safe.')
+],'Count how many times each word appears in "the cat and the hat".','counts = {}\nfor word in "the cat and the hat".split():\n    counts[word] = counts.get(word, 0) + 1\nprint(counts)  # {\'the\': 2, \'cat\': 1, \'and\': 1, \'hat\': 1}'),
+
+L('d4','data','Comprehensions and nested data',15,String.raw`
+A **list comprehension** builds a list in one line.
+
+~~~
+squares = [n * n for n in range(5)]
+print(squares)            # [0, 1, 4, 9, 16]
+
+evens = [n for n in range(10) if n % 2 == 0]
+print(evens)              # [0, 2, 4, 6, 8]
+~~~
+
+Read it as: "give me ~n * n~ for each ~n~ in the range". The optional ~if~ filters.
+
+The same idea works for dictionaries:
+
+~~~
+lengths = {w: len(w) for w in ["hi", "hello"]}
+print(lengths)            # {'hi': 2, 'hello': 5}
+~~~
+
+## Nested data
+Real data is often a list of dictionaries:
+
+~~~
+people = [
+    {"name": "Ada", "age": 36},
+    {"name": "Linus", "age": 28},
+]
+for p in people:
+    print(p["name"])
+names = [p["name"] for p in people]
+~~~
+
+>> If a comprehension gets hard to read, use a normal loop. Clear beats clever.
+`,[
+ Q('What does [x * 2 for x in [1, 2, 3]] give?',['[2, 4, 6]','[1, 2, 3, 1, 2, 3]','[1, 4, 9]','[2, 3, 4]'],0,'Each item is doubled.'),
+ Q('What does [n for n in range(10) if n % 5 == 0] give?',['[0, 5]','[5]','[0, 5, 10]','[5, 10]'],0,'Only 0 and 5 from 0-9 are divisible by 5.')
+],'Given names = ["Al", "Bea", "Chen", "Dee"], make a list of the UPPERCASE names that are longer than 3 letters.','names = ["Al", "Bea", "Chen", "Dee"]\nprint([n.upper() for n in names if len(n) > 3])  # [\'CHEN\']'),
+
+/* ---------- Functions ---------- */
+L('fn1','funcs','Defining functions',15,String.raw`
+A **function** is a named, reusable block of code. You write it once and use it anywhere.
+
+~~~
+def greet(name):
+    print(f"Hello, {name}!")
+
+greet("Ada")
+greet("Linus")
+~~~
+
+- ~def~ starts the definition
+- ~name~ is a **parameter**, a placeholder for what you pass in
+- The indented lines are the **body**
+- Writing ~greet("Ada")~ **calls** it. Nothing happens until you call.
+
+## Why bother?
+Functions remove repetition and give chunks of logic a readable name. A good rule: if you copy and paste code, turn it into a function.
+
+## Docstrings
+A string on the first line documents what the function does:
+
+~~~
+def greet(name):
+    """Print a friendly greeting."""
+    print(f"Hello, {name}!")
+~~~
+`,[
+ Q('What must you do to run a function you defined?',['Call it with parentheses, like greet("Ada")','Nothing, it runs automatically','Import it','Print its name'],0,'Defining only creates it. The call runs it.'),
+ Q('Which keyword defines a function?',['def','func','function','define'],0,'Python uses def.')
+],'Write a function square_area(side) that prints the area of a square. Call it with two different sizes.','def square_area(side):\n    print(side * side)\n\nsquare_area(3)\nsquare_area(10)'),
+
+L('fn2','funcs','Parameters, return values and defaults',15,String.raw`
+Printing shows a result to a person. **Returning** hands a result back to your code so you can keep using it.
+
+~~~
+def add(a, b):
+    return a + b
+
+total = add(2, 3)
+print(total * 10)   # 50
+~~~
+
+A function with no ~return~ gives back ~None~, Python's "nothing".
+
+## Defaults and keywords
+~~~
+def greet(name="friend", punctuation="!"):
+    return f"Hello, {name}{punctuation}"
+
+print(greet())                    # Hello, friend!
+print(greet("Ada"))               # Hello, Ada!
+print(greet("Ada", punctuation="?"))  # Hello, Ada?
+~~~
+
+## Returning several values
+~~~
+def min_max(nums):
+    return min(nums), max(nums)
+
+low, high = min_max([4, 9, 2])
+~~~
+
+>> ~return~ also ends the function immediately. Anything after it in the same branch never runs.
+`,[
+ Q('What does this print?',['hi then None','hi only','None only','Error'],0,'f() prints "hi" and returns None. x holds None, which then gets printed.','def f():\n    print("hi")\n\nx = f()\nprint(x)'),
+ Q('With the defaults above, what does greet() return?',['"Hello, friend!"','"Hello, !"','None','Error'],0,'Missing arguments fall back to their default values.')
+],'Write is_even(n) that returns True or False. Use it in a loop to print the even numbers from 0 to 9.','def is_even(n):\n    return n % 2 == 0\n\nfor n in range(10):\n    if is_even(n):\n        print(n)'),
+
+L('fn3','funcs','Scope and writing good functions',12,String.raw`
+Variables made inside a function are **local**. They disappear when it finishes.
+
+~~~
+def make_msg():
+    msg = "hello"
+    return msg
+
+make_msg()
+print(msg)   # NameError: msg is not defined
+~~~
+
+Functions can read outer variables, but changing them from inside is usually a bad idea. Pass things in and return things out instead.
+
+## Habits of good functions
+- **One job** each, with a name that says it (~calculate_tax~, not ~do_stuff~)
+- **Inputs as parameters, results as returns**
+- Short enough to read without scrolling
+
+## The mutable default trap
+~~~
+def add_item(item, items=[]):   # BAD: one list shared forever
+    items.append(item)
+    return items
+
+def add_item(item, items=None): # GOOD
+    if items is None:
+        items = []
+    items.append(item)
+    return items
+~~~
+
+The default value is created once, when the function is defined, so a list default keeps growing between calls.
+`,[
+ Q('Can code outside a function see a variable created inside it?',['Yes, always','No, it is local to the function','Only if it is a number','Only in loops'],1,'Local variables vanish when the function returns.'),
+ Q('Which default is safe for a function parameter meant to hold a new list each call?',['items=[]','items=None','items={}','items=list'],1,'Use None and create the list inside the function.')
+],'Write average(numbers) that returns the average of a list, then print average([4, 8, 6]).','def average(numbers):\n    return sum(numbers) / len(numbers)\n\nprint(average([4, 8, 6]))  # 6.0'),
+
+L('fn4','funcs','Modules and the standard library',12,String.raw`
+Python ships with hundreds of ready-made tools, known as the **standard library**. Use ~import~ to bring one in.
+
+~~~
+import math
+import random
+from datetime import date
+
+print(math.sqrt(16))         # 4.0
+print(random.randint(1, 6))  # a dice roll
+print(random.choice(["rock", "paper", "scissors"]))
+print(date.today())
+~~~
+
+- ~import math~ then write ~math.sqrt~
+- ~from datetime import date~ lets you write ~date~ directly
+
+## Your own modules
+Any ~.py~ file is a module. If you save ~tools.py~ with a function ~double~, another file can write ~from tools import double~.
+
+## A useful idiom
+~~~
+def main():
+    print("running")
+
+if __name__ == "__main__":
+    main()
+~~~
+
+The last two lines mean "run ~main()~ only when this file is started directly, not when it is imported".
+
+>> Before writing something from scratch, search "python standard library" plus your task. Dates, JSON, files, maths, random numbers and more are already built in.
+`,[
+ Q('What does math.sqrt(16) return?',['4','4.0','8','16'],1,'sqrt always returns a float.'),
+ Q('What does import do?',['Loads a module so you can use its code','Deletes a file','Prints a message','Creates a variable'],0,'import makes a module available in your program.')
+],'Write a dice roller that rolls two dice with random.randint(1, 6) and prints each roll and the total.','import random\n\na = random.randint(1, 6)\nb = random.randint(1, 6)\nprint(f"{a} + {b} = {a + b}")'),
+
+/* ---------- Real world ---------- */
+L('r1','real','Reading errors and tracebacks',12,String.raw`
+Every programmer sees errors all day. The skill is reading them.
+
+~~~txt
+Traceback (most recent call last):
+  File "demo.py", line 2, in <module>
+    print(total)
+NameError: name 'total' is not defined
+~~~
+
+**Read from the bottom up.** The last line names the error type and explains it. Above it, Python shows the file and line number where it happened.
+
+## The usual suspects
+- ~SyntaxError~: the code is malformed (missing colon, bracket or quote)
+- ~IndentationError~: indentation is uneven
+- ~NameError~: you used a name that doesn't exist (often a typo)
+- ~TypeError~: wrong kind of value, like adding text and a number
+- ~ValueError~: right type but unusable value, like ~int("abc")~
+- ~IndexError~ and ~KeyError~: a position or key that isn't there
+- ~ZeroDivisionError~: dividing by zero
+
+Modern Python often adds hints such as "Did you mean...?" for misspelled names. Read them.
+
+## A debugging routine
+1. Read the last line.
+2. Go to the line number mentioned.
+3. Check what the variables hold with a ~print()~.
+4. Change one thing, run again.
+`,[
+ Q('Where should you look first in a traceback?',['The last line','The first line','The middle','Nowhere, just rerun'],0,'The last line names the error and gives the message.'),
+ Q('What does int("abc") raise?',['TypeError','ValueError','NameError','SyntaxError'],1,'It is a string, which is the right type, but its value cannot be turned into an integer.')
+],'Fix all bugs in this program so it prints 0, 1, 2 and then "done".\n\nfor i in range(3)\n    print(i)\nprint("done)','for i in range(3):\n    print(i)\nprint("done")'),
+
+L('r2','real','Handling errors with try and except',12,String.raw`
+Sometimes errors are expected, such as a user typing letters instead of a number. **Exceptions** let you handle them gracefully.
+
+~~~
+while True:
+    text = input("Number: ")
+    try:
+        n = int(text)
+        break
+    except ValueError:
+        print("That's not a number, try again.")
+print(n * 2)
+~~~
+
+If something inside ~try~ raises a ~ValueError~, Python jumps to ~except~ and carries on instead of crashing.
+
+## Good habits
+- Catch **specific** errors (~except ValueError~), not everything. A bare ~except:~ hides real bugs.
+- Keep the ~try~ block small.
+- You can raise your own errors:
+
+~~~
+def set_age(age):
+    if age < 0:
+        raise ValueError("age cannot be negative")
+    return age
+~~~
+
+There are also ~else~ (runs if no error happened) and ~finally~ (always runs, good for cleanup).
+`,[
+ Q('When does the except block run?',['Only when a matching error happens inside try','Always','Never','Before the try block'],0,'It runs only if the try block raises the named kind of error.'),
+ Q('Why prefer except ValueError over a bare except?',['It handles only the expected problem and does not hide other bugs','It runs faster','It is shorter','It is required'],0,'Catching everything can silently swallow mistakes you need to see.')
+],'Write safe_divide(a, b) that returns a / b, or None if b is zero (use try/except ZeroDivisionError).','def safe_divide(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return None\n\nprint(safe_divide(10, 2))  # 5.0\nprint(safe_divide(1, 0))   # None'),
+
+L('r3','real','Working with files and pathlib',15,String.raw`
+Programs become useful when they remember things. The modern way to handle files is ~pathlib~.
+
+~~~
+from pathlib import Path
+
+notes = Path("notes.txt")
+notes.write_text("Buy milk\n", encoding="utf-8")
+print(notes.read_text(encoding="utf-8"))
+print(notes.exists())   # True
+~~~
+
+~write_text~ replaces the whole file. To add to the end, use ~open~ with the ~with~ statement, which closes the file for you:
+
+~~~
+with open("notes.txt", "a", encoding="utf-8") as f:
+    f.write("Call mum\n")
+
+with open("notes.txt", encoding="utf-8") as f:
+    for number, line in enumerate(f, start=1):
+        print(number, line.strip())
+~~~
+
+Modes: ~"r"~ read (default), ~"w"~ write (erases!), ~"a"~ append.
+
+Always pass ~encoding="utf-8"~ so accents and emoji survive on every computer.
+
+~Path~ objects are smart about slashes across Windows, macOS and Linux: ~Path("data") / "file.txt"~ just works.
+`,[
+ Q('What does the with statement guarantee?',['The file is closed automatically when the block ends','The file is deleted','The file is read twice','Nothing special'],0,'with handles cleanup even if an error occurs.'),
+ Q('Which mode appends to the end of a file?',['"r"','"w"','"a"','"x"'],2,'"a" appends. "w" overwrites.')
+],'Write a program that appends a line typed by the user to todo.txt, then prints the whole file with numbered lines.','from pathlib import Path\n\ntask = input("New task: ")\nwith open("todo.txt", "a", encoding="utf-8") as f:\n    f.write(task + "\\n")\n\nfor n, line in enumerate(Path("todo.txt").read_text(encoding="utf-8").splitlines(), start=1):\n    print(n, line)'),
+
+L('r4','real','JSON: saving structured data',10,String.raw`
+**JSON** is a text format for structured data, used by web services and apps everywhere. It looks just like Python dictionaries and lists.
+
+~~~
+import json
+
+settings = {"theme": "dark", "volume": 7, "muted": False}
+
+text = json.dumps(settings, indent=2)   # Python -> JSON text
+back = json.loads(text)                 # JSON text -> Python
+~~~
+
+Saving to and loading from a file:
+
+~~~
+from pathlib import Path
+import json
+
+path = Path("settings.json")
+path.write_text(json.dumps(settings, indent=2), encoding="utf-8")
+
+loaded = json.loads(path.read_text(encoding="utf-8"))
+print(loaded["theme"])   # dark
+~~~
+
+Small differences: JSON writes ~true~, ~false~ and ~null~, which Python turns into ~True~, ~False~ and ~None~. Keys must be text.
+
+>> Remember ~dumps~ / ~loads~ with an ~s~ for strings, and ~dump~ / ~load~ for file objects.
+`,[
+ Q('What does json.loads do?',['Turns JSON text into Python objects','Saves a file','Sorts a dictionary','Loads a module'],0,'loads means "load from string".'),
+ Q('JSON true becomes what in Python?',['true','True','"true"','1'],1,'JSON booleans map to Python True and False.')
+],'Save the dictionary {"name": "Sam", "level": 3} to profile.json, then load it back and print the level.','import json\nfrom pathlib import Path\n\np = Path("profile.json")\np.write_text(json.dumps({"name": "Sam", "level": 3}), encoding="utf-8")\nprint(json.loads(p.read_text(encoding="utf-8"))["level"])'),
+
+L('r5','real','Packages, pip and virtual environments',15,String.raw`
+Beyond the standard library sits **PyPI**, the Python Package Index, with hundreds of thousands of free packages (requests, pandas, Flask, and so on).
+
+## Virtual environments
+Different projects need different package versions. A **virtual environment** is a private folder of packages for one project.
+
+~~~sh
+python -m venv .venv
+source .venv/bin/activate        # macOS / Linux
+.venv\Scripts\activate           # Windows
+pip install rich
+~~~
+
+When active, your terminal shows ~(.venv)~. Install packages there and they stay inside the project.
+
+## The modern shortcut: uv
+~uv~ does all of this faster and pins the Python version too:
+
+~~~sh
+uv init my-project
+cd my-project
+uv add rich
+uv run main.py
+~~~
+
+It records your dependencies in ~pyproject.toml~, which is the standard project file today.
+
+## Try a package
+~~~
+from rich import print
+print("[bold green]It works![/]")
+~~~
+
+>> Only install packages from PyPI that you recognize or have checked. Anyone can publish there, and look-alike names exist.
+`,[
+ Q('What is a virtual environment for?',['Keeping each project\'s packages separate','Making Python run faster','Writing code without an editor','Backing up files'],0,'It avoids version clashes between projects.'),
+ Q('Where does pip install packages from by default?',['PyPI','Your Documents folder','Wikipedia','GitHub issues'],0,'The Python Package Index.')
+],'Create a virtual environment (or a uv project), install rich, and run the two-line rich example from this lesson.','from rich import print\nprint("[bold green]It works![/]")'),
+
+/* ---------- Objects and types ---------- */
+L('o1','oop','Classes and objects',20,String.raw`
+A **class** is a blueprint. An **object** (or instance) is one thing made from it.
+
+~~~
+class Dog:
+    def __init__(self, name):
+        self.name = name
+
+    def bark(self):
+        return f"{self.name} says woof"
+
+rex = Dog("Rex")
+fido = Dog("Fido")
+print(rex.bark())    # Rex says woof
+print(fido.name)     # Fido
+~~~
+
+- ~__init__~ runs when you create an object. It sets up its **attributes**.
+- ~self~ means "this particular object". Every method receives it first.
+- Functions inside a class are called **methods**.
+
+## Objects keep state
+~~~
+class Counter:
+    def __init__(self):
+        self.value = 0
+
+    def up(self):
+        self.value += 1
+
+c = Counter()
+c.up()
+c.up()
+print(c.value)   # 2
+~~~
+
+Two counters have separate values. That combination of data and the actions on it is the heart of object-oriented programming.
+`,[
+ Q('What is self?',['The specific object the method is working on','A built-in keyword that means class','A global variable','The class name'],0,'self refers to the instance calling the method.'),
+ Q('What does Dog("Rex") create?',['A new Dog object','A new class','A function','A string'],0,'Calling a class builds an instance of it.')
+],'Write a BankAccount class with a balance starting at 0, plus deposit(amount) and withdraw(amount) methods. Refuse to withdraw more than the balance.','class BankAccount:\n    def __init__(self):\n        self.balance = 0\n\n    def deposit(self, amount):\n        self.balance += amount\n\n    def withdraw(self, amount):\n        if amount > self.balance:\n            raise ValueError("insufficient funds")\n        self.balance -= amount\n\nacct = BankAccount()\nacct.deposit(50)\nacct.withdraw(20)\nprint(acct.balance)  # 30'),
+
+L('o2','oop','Dataclasses: less boilerplate',12,String.raw`
+Many classes exist just to hold data. Writing ~__init__~ and friends by hand gets tedious, so Python has **dataclasses**.
+
+~~~
+from dataclasses import dataclass
+
+@dataclass
+class Book:
+    title: str
+    pages: int
+    read: bool = False
+
+b = Book("Dune", 612)
+print(b)           # Book(title='Dune', pages=612, read=False)
+print(b.title)
+~~~
+
+Python generates ~__init__~, a readable printout and equality checks for you.
+
+## Lists of objects
+~~~
+books = [Book("Dune", 612), Book("Emma", 474)]
+longest = max(books, key=lambda bk: bk.pages)
+by_title = sorted(books, key=lambda bk: bk.title)
+~~~
+
+~key=~ tells ~max~ and ~sorted~ which value to compare. The ~lambda~ is a tiny one-line function.
+
+>> Reach for a dataclass when you mostly store fields. Use a regular class when behaviour matters more.
+`,[
+ Q('What does the @dataclass decorator save you from writing?',['__init__ and other boilerplate methods','Import statements','Variables','Loops'],0,'It generates init, repr and equality automatically.'),
+ Q('What does key= do in sorted()?',['Chooses what value each item is compared by','Sets a password','Reverses the list','Removes duplicates'],0,'It picks the sorting criterion.')
+],'Create a Book dataclass, make a list of three books, and print the title of the one with the most pages.','from dataclasses import dataclass\n\n@dataclass\nclass Book:\n    title: str\n    pages: int\n\nbooks = [Book("A", 100), Book("B", 350), Book("C", 210)]\nprint(max(books, key=lambda b: b.pages).title)'),
+
+L('o3','oop','Type hints',12,String.raw`
+Python figures out types while running, but you can add **type hints** that document your intent.
+
+~~~
+def greet(name: str) -> str:
+    return f"Hello, {name}"
+
+def total(prices: list[float]) -> float:
+    return sum(prices)
+
+def find(names: list[str], target: str) -> int | None:
+    if target in names:
+        return names.index(target)
+    return None
+~~~
+
+- ~name: str~ says the parameter should be text
+- ~-> str~ says the function returns text
+- ~int | None~ means "an int or None"
+- ~list[float]~ and ~dict[str, int]~ describe containers
+
+## Important
+Python does **not** enforce hints when the program runs. They help **you** and your tools: editors and checkers such as mypy or pyright warn you about mismatches before you run anything.
+
+In Python 3.14, annotations are evaluated lazily, so you can refer to a class that is defined later without quoting its name.
+
+>> Hints are optional. Adding them to function signatures is the highest-value habit.
+`,[
+ Q('Does Python stop you at runtime from passing the wrong type to a hinted function?',['No, hints are not enforced by Python itself','Yes, always','Only for numbers','Only in classes'],0,'Tools like pyright or mypy do the checking.'),
+ Q('What does int | None mean?',['An int or None','An int and None','Either int or float','Nothing'],0,'The bar means "or".')
+],'Add type hints to: def area(width, height): return width * height  (numbers in, number out).','def area(width: float, height: float) -> float:\n    return width * height'),
+
+/* ---------- Modern ---------- */
+L('m1','modern','match: pattern matching',10,String.raw`
+Since Python 3.10 there is a **match** statement. It's like ~if/elif~ but can look at the shape of data.
+
+~~~
+def describe(command):
+    match command.split():
+        case ["go", direction]:
+            return f"Going {direction}"
+        case ["take", item]:
+            return f"Taking {item}"
+        case ["quit"]:
+            return "Bye"
+        case _:
+            return "Unknown command"
+
+print(describe("go north"))    # Going north
+print(describe("dance"))       # Unknown command
+~~~
+
+The pattern ~["go", direction]~ matches a two-item list whose first item is ~"go"~, and captures the second as ~direction~. The underscore ~_~ matches anything, so it acts as the default.
+
+## Simple values
+~~~
+match status:
+    case 200:
+        print("OK")
+    case 404 | 410:
+        print("Gone")
+    case _:
+        print("Other")
+~~~
+
+>> Use ~match~ when you are taking apart structured data, such as commands or dictionaries. For simple true/false checks, ~if~ is still better.
+`,[
+ Q('What does case _ mean?',['It matches anything, like a default','It matches the underscore character','It is an error','It skips the match'],0,'The underscore is the wildcard pattern.'),
+ Q('When does match shine most?',['Taking apart structured data','Adding numbers','Printing text','Importing modules'],0,'Its power is matching shapes, not simple comparisons.')
+],'Write a function http_message(code) using match: 200 gives "OK", 404 gives "Not found", 500 gives "Server error", anything else "Unknown".','def http_message(code):\n    match code:\n        case 200:\n            return "OK"\n        case 404:\n            return "Not found"\n        case 500:\n            return "Server error"\n        case _:\n            return "Unknown"'),
+
+L('m2','modern','What is new: Python 3.14 and beyond',12,String.raw`
+Python releases a new version **every October**, and each gets about five years of support. You're learning on the current generation, so here's what recent releases brought, in plain words.
+
+## Python 3.14 (October 2025)
+- **Template strings (t-strings).** Written like f-strings with a ~t~ prefix, they don't produce a plain string. They produce a **Template** object that libraries can process safely, for example to escape user input before building HTML or SQL.
+- **Free-threaded Python is officially supported.** A special build can run threads truly in parallel, without the old global lock. It's optional and still maturing, and you don't need it as a beginner.
+- **Deferred annotations.** Type hints are evaluated lazily, so forward references just work.
+- **Friendlier tooling.** The interactive prompt is more helpful, and error messages keep getting clearer.
+- **Standard library additions**, such as Zstandard compression, plus an experimental JIT compiler for speed research.
+
+## What this means for you
+Everything in this course runs on 3.14, and on 3.13 too. Python 3.15 is scheduled for around October 2026, and because Python protects backward compatibility, what you learn stays valid.
+
+## Keeping current
+- Skim "What's New" on docs.python.org each October
+- Use ~uv~ or your installer to update Python
+- Move off versions that have reached end of life
+`,[
+ Q('What does a t-string produce?',['A Template object, not a plain string','A list of characters','A number','An error'],0,'That lets libraries process the parts safely, for instance for HTML or SQL.'),
+ Q('How often does Python get a new feature release?',['Once a year, in October','Every week','Every five years','Only when Guido decides'],0,'The yearly October cycle has been standard since Python 3.9.')
+],'Run python --version. Then search docs.python.org for "What\'s New in Python 3.14" and find one feature you want to try later. Note its name.'),
+
+L('m3','modern','Testing your code with pytest',15,String.raw`
+Tests are small programs that check your code still works. They let you change things without fear.
+
+Install ~pytest~ into your environment (~pip install pytest~ or ~uv add --dev pytest~). Then put a function in ~math_tools.py~:
+
+~~~
+def is_even(n):
+    return n % 2 == 0
+~~~
+
+And tests in ~test_math_tools.py~:
+
+~~~
+from math_tools import is_even
+
+def test_even_number():
+    assert is_even(4) is True
+
+def test_odd_number():
+    assert is_even(7) is False
+~~~
+
+Run them from the project folder:
+
+~~~sh
+pytest
+~~~
+
+- ~assert~ says "this must be true". If not, the test fails and pytest shows exactly why.
+- Test files and functions must start with ~test_~ so pytest finds them.
+
+## What to test
+Normal cases, edge cases (empty list, zero, negative) and mistakes you already fixed once.
+`,[
+ Q('How must test functions be named for pytest to find them?',['They start with test_','They end with _end','They start with check','Any name works'],0,'pytest discovers functions named test_*.'),
+ Q('What happens when an assert is False?',['The test fails and pytest reports why','The program ignores it','The file is deleted','Python restarts'],0,'An AssertionError is raised and reported.')
+],'Write two tests for your average() function from the functions module: one normal list and one with a single number.','from tools import average\n\ndef test_normal():\n    assert average([2, 4, 6]) == 4\n\ndef test_single():\n    assert average([5]) == 5'),
+
+L('m4','modern','Choose your path',15,String.raw`
+You now have the core of Python. The language branches into many fields, and each one is mostly a set of libraries on top of what you already know.
+
+## Popular paths
+- **Web apps and APIs:** Flask or FastAPI for lightweight services, Django for full sites
+- **Data and analysis:** Jupyter notebooks, pandas or Polars, and matplotlib for charts
+- **Automation and scripts:** ~pathlib~, ~requests~ or ~httpx~ for web calls, scheduling, renaming and organizing files
+- **AI and machine learning:** NumPy, scikit-learn and PyTorch, plus calling AI model APIs from your own programs
+- **Games and creative:** pygame, or generative art libraries
+
+## How to learn the next thing
+1. Pick **one** library tied to something you care about.
+2. Read its quick-start and run the first example.
+3. Change it until it does something you wanted.
+4. Only then read more.
+
+## Habits that compound
+- Code a little every day, even 20 minutes
+- Read other people's code
+- Keep projects small and finish them
+- When stuck: read the error, shrink the problem, then ask with a short example
+
+>> The capstone next is where these skills stick. Choose something small enough to finish.
+`,[
+ Q('What is the best way to learn a new library?',['Run its quick-start example, then modify it','Memorize the documentation','Avoid examples','Read only forums'],0,'Hands-on changes beat passive reading.'),
+ Q('Why keep projects small?',['You are more likely to finish them and learn from them','Small code is always faster','Big projects are illegal','No reason'],0,'Finished small projects build confidence and skill.')
+],'Pick one library from the path you like. Find its quick-start page and run the first example on your computer.',null,true),
+
+/* ---------- Capstone ---------- */
+L('c1','capstone','Capstone 1: choose and plan',20,String.raw`
+Now you build something of your own. Pick **one**:
+
+- **Expense tracker:** add expenses, list them, show totals by category
+- **Quiz game:** ask questions, keep score, save the best score
+- **Habit tracker:** mark habits done each day and show streaks
+- **Text adventure:** rooms, items and commands using ~match~
+- **File organizer:** sort a folder's files into subfolders by type
+
+## Plan before you type
+Write three sentences: **what it does**, **what the user types or clicks**, and **what it saves**.
+
+Then list a **minimum version** with only 3 features. That is your MVP (minimum viable product). Everything else goes in a "later" list.
+
+## Sketch the pieces
+~~~
+# main.py plan
+# - load_data(): read JSON file, return list
+# - save_data(items): write JSON file
+# - add_item(items): ask user, append
+# - show_items(items): print nicely
+# - main(): menu loop
+~~~
+
+Comments as a plan are a great first draft. Each line becomes a function.
+`,[
+ Q('What is an MVP?',['The smallest version that does the core job','A finished perfect program','A type of variable','A testing tool'],0,'Start small so you finish, then add features.'),
+ Q('Why write a plan in comments first?',['It breaks the project into small functions you can build one at a time','Comments run faster','Python requires it','It makes the file longer'],0,'A plan turns a big task into small steps.')
+],'Create a folder and a main.py. Write your three-sentence description and your three-feature MVP as comments at the top.',null,true),
+
+L('c2','capstone','Capstone 2: build the core',20,String.raw`
+Build the **smallest working version** first. Don't try to write everything in one go.
+
+## A rhythm that works
+1. Write one function.
+2. Run the file.
+3. Fix what breaks.
+4. Repeat.
+
+Run your code after every few lines. Finding one bug at a time is easy. Finding ten at once is miserable.
+
+## A menu loop skeleton
+~~~
+def main():
+    items = []
+    while True:
+        print("1) Add  2) Show  3) Quit")
+        choice = input("> ")
+        match choice:
+            case "1":
+                items.append(input("Item: "))
+            case "2":
+                for item in items:
+                    print("-", item)
+            case "3":
+                break
+            case _:
+                print("Please choose 1, 2 or 3")
+
+if __name__ == "__main__":
+    main()
+~~~
+
+Adapt the skeleton to your project idea. Use dictionaries or dataclasses for richer items.
+
+>> Stuck? Use ~print()~ to look at values, read the traceback from the bottom, and shrink the problem to a few lines.
+`,[
+ Q('Why run your code after every few lines?',['You find bugs one at a time, while they are easy to locate','It makes Python faster','Required by pytest','It is not useful'],0,'Short feedback loops make debugging simple.'),
+ Q('What does break do inside the menu while True loop?',['Exits the loop','Prints a break','Restarts the loop','Raises an error'],0,'break leaves the loop so the program can finish.')
+],'Build your MVP until at least two of the three features work when you run the program.',null,true),
+
+L('c3','capstone','Capstone 3: save data and handle mistakes',20,String.raw`
+Make your program **remember** and **forgive**.
+
+## Saving with JSON
+~~~
+import json
+from pathlib import Path
+
+DATA = Path("data.json")
+
+def load_data():
+    if DATA.exists():
+        return json.loads(DATA.read_text(encoding="utf-8"))
+    return []
+
+def save_data(items):
+    DATA.write_text(json.dumps(items, indent=2), encoding="utf-8")
+~~~
+
+Call ~load_data()~ when the program starts and ~save_data(items)~ after each change.
+
+## Forgiving users
+~~~
+def ask_number(prompt):
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("Please type a number.")
+~~~
+
+People type unexpected things. Wrap risky steps in ~try/except~ and let the user try again.
+
+## Also check
+- What if the file doesn't exist yet?
+- What if the user types nothing?
+- What if a number is negative?
+`,[
+ Q('Why call load_data() when the program starts?',['So previous information is available again','To delete old data','To speed up Python','It is not needed'],0,'Loading restores saved state.'),
+ Q('What does try/except let your program do with bad input?',['Handle it and keep running','Ignore the keyboard','Crash faster','Skip printing'],0,'You can catch the error and ask again.')
+],'Add saving to your project so data survives closing the program, and validate at least one input with try/except.',null,true),
+
+L('c4','capstone','Capstone 4: test, tidy and share',20,String.raw`
+Finish like a professional.
+
+## 1. Test the important parts
+Move logic (not input/print) into functions and write a couple of ~pytest~ tests for them.
+
+## 2. Tidy
+- Give functions and variables clear names
+- Add type hints to function signatures
+- Remove leftover debugging ~print()~ calls
+- Add docstrings to the main functions
+
+## 3. Write a README
+A README says what the project is, how to run it, and an example. Four short sections is plenty: **What it does**, **How to run it**, **Example**, **Ideas for later**.
+
+## 4. Keep your history with Git
+~~~sh
+git init
+git add .
+git commit -m "First working version"
+~~~
+
+Git saves snapshots of your project so you can undo mistakes. Put the project on GitHub when you want to share it.
+
+## You did it
+You started with how a computer works and finished with a tested, saved, shareable program. Keep the habit: small sessions, often. Pick your next project from the paths lesson and start it this week.
+`,[
+ Q('What should a README contain?',['What the project does and how to run it','Only the license','Nothing','A copy of the code'],0,'It helps future you and other people get started.'),
+ Q('What does git commit do?',['Saves a snapshot of your project','Deletes the project','Runs the tests','Installs Python'],0,'A commit is a saved checkpoint.')
+],'Write two pytest tests for your project, add type hints, write a README, and make your first Git commit.',null,true)
+];
+LESSONS.forEach(l=>{l.mod=TN[l.topic]});
+const LBY=Object.fromEntries(LESSONS.map(l=>[l.id,l]));
+
+/* ============ HELPERS ============ */
+const $app=document.getElementById('app');
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function inline(s){return esc(s).replace(/~([^~\n]+)~/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')}
+const KW='and|as|assert|break|class|continue|def|del|elif|else|except|finally|for|from|if|import|in|is|lambda|match|case|not|or|pass|raise|return|try|while|with|yield|True|False|None';
+const BI='print|len|range|input|int|float|str|bool|list|dict|set|tuple|sum|min|max|sorted|enumerate|open|type|round|abs|zip';
+const HL=new RegExp('(#.*$)|((?:[fFrRbBtT]{0,2})(?:"""[\\s\\S]*?"""|"(?:\\\\.|[^"\\\\\\n])*"|\'(?:\\\\.|[^\'\\\\\\n])*\'))|\\b('+KW+')\\b|\\b(\\d+(?:\\.\\d+)?)\\b|\\b('+BI+')(?=\\()','gm');
+function hl(code){
+  let out='',last=0,m;HL.lastIndex=0;
+  while((m=HL.exec(code))){
+    out+=esc(code.slice(last,m.index));
+    const cls=m[1]?'t-c':m[2]?'t-s':m[3]?'t-k':m[4]?'t-n':'t-b';
+    out+='<span class="'+cls+'">'+esc(m[0])+'</span>';
+    last=m.index+m[0].length;
+    if(m[0].length===0)HL.lastIndex++;
+  }
+  return out+esc(code.slice(last));
+}
+function codeBlock(code,lang){
+  const plain=(lang==='sh'||lang==='txt');
+  return '<pre class="code'+(lang==='sh'?' sh':'')+'"><code>'+(plain?esc(code):hl(code))+'</code></pre>';
+}
+function md(text){
+  const lines=text.replace(/^\n+|\n+$/g,'').split('\n');
+  let html='',para=[],list=[],tip=[],fence=null,buf=[];
+  const flush=()=>{
+    if(para.length){html+='<p>'+inline(para.join(' '))+'</p>';para=[]}
+    if(list.length){html+='<ul>'+list.map(i=>'<li>'+inline(i)+'</li>').join('')+'</ul>';list=[]}
+    if(tip.length){html+='<div class="tip">'+inline(tip.join(' '))+'</div>';tip=[]}
+  };
+  for(const line of lines){
+    if(fence!==null){
+      if(line.trim()==='~~~'){html+=codeBlock(buf.join('\n'),fence);fence=null;buf=[]}
+      else buf.push(line);
+      continue;
+    }
+    const f=line.match(/^~~~(\w*)\s*$/);
+    if(f){flush();fence=f[1]||'py';buf=[];continue}
+    if(line.trim()===''){flush();continue}
+    if(line.startsWith('## ')){flush();html+='<h3>'+inline(line.slice(3))+'</h3>';continue}
+    if(line.startsWith('- ')){if(para.length||tip.length)flush();list.push(line.slice(2));continue}
+    if(line.startsWith('>> ')){if(para.length||list.length)flush();tip.push(line.slice(3));continue}
+    if(list.length){flush()}
+    para.push(line);
+  }
+  flush();
+  return html;
+}
+function fmtMin(m){const h=Math.floor(m/60),r=m%60;return h?(h+' h'+(r?' '+r+' min':'')):(r+' min')}
+function pad(n){return String(n).padStart(2,'0')}
+function todayIso(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function parseIso(s){return new Date(s+'T00:00:00')}
+function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})}
+function sessionDates(n,perWeek,startIso){
+  const allowed={7:[0,1,2,3,4,5,6],5:[1,2,3,4,5],3:[1,3,5]}[perWeek]||[1,2,3,4,5];
+  const out=[];const d=parseIso(startIso);
+  while(out.length<n){if(allowed.includes(d.getDay()))out.push(new Date(d));d.setDate(d.getDate()+1)}
+  return out;
+}
+function pack(ids,cap){
+  const sessions=[];let cur=[],sum=0;
+  for(const id of ids){
+    const m=LBY[id].min;
+    if(cur.length&&sum+m>cap+3){sessions.push(cur);cur=[];sum=0}
+    cur.push(id);sum+=m;
+  }
+  if(cur.length)sessions.push(cur);
+  return sessions;
+}
+
+/* ============ STATE ============ */
+const KEY='pythondaily.v1';
+function defaults(){return{goal:'explore',exp:null,answers:{},skip:[],minutes:45,perWeek:5,start:null,plan:null,done:{},picks:{},open:{}}}
+function load(){try{const r=localStorage.getItem(KEY);if(r)return Object.assign(defaults(),JSON.parse(r))}catch(e){}return defaults()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+let S=load();
+let V={name:S.plan?'plan':'home',stage:0,qi:0,n:0,id:null,confirm:false};
+
+function activeIds(){return LESSONS.filter(l=>l.always||!S.skip.includes(l.topic)).map(l=>l.id)}
+function remainingIds(){return activeIds().filter(id=>!S.done[id])}
+function computeSkip(){
+  const skip=[];let ok=true;
+  for(const t of TOPICS.filter(t=>t.skip)){
+    const qs=PLACEMENT.filter(p=>p.t===t.id);
+    const right=qs.filter(p=>S.answers[p.id]===p.a).length;
+    const need=qs.length-(qs.length>=3?1:0);
+    if(ok&&right>=need)skip.push(t.id);else ok=false;
+  }
+  return skip;
+}
+
+/* ============ VIEWS ============ */
+function go(name,extra){Object.assign(V,{name:name,confirm:false},extra||{});render(false)}
+function update(){render(true)}
+
+function renderMini(){
+  const el=document.getElementById('mini');
+  if(!S.plan){el.innerHTML='';return}
+  const ids=activeIds();const d=ids.filter(i=>S.done[i]).length;
+  const pct=ids.length?Math.round(d/ids.length*100):0;
+  el.innerHTML='<span>'+d+' of '+ids.length+' lessons</span><div class="bar" role="progressbar" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100"><span style="width:'+pct+'%"></span></div>'
+   +(S.plan?'<button class="link" data-a="plan">My plan</button>':'');
+}
+
+function vHome(){
+  return '<section class="hero"><div>'
+  +'<h1>Learn Python at the pace you can keep.</h1>'
+  +'<p class="lead">Answer 15 short questions about computers and code. We skip what you already know and split the rest into daily sessions that fit the time you actually have.</p>'
+  +'<div class="cta-row"><button class="btn" data-a="start">Find my starting point</button>'
+  +'<button class="btn ghost" data-a="brandnew">I\'m brand new, skip the questions</button></div>'
+  +'<span class="stamp">Updated for Python 3.14 (October 2026)</span></div>'
+  +'<pre class="codecard" aria-label="Decorative example of how the plan is built"><code><span class="cm"># 15 questions in, a plan out</span>\n<span class="k">you</span> = {<span class="s">"level"</span>: <span class="s">"new"</span>, <span class="s">"minutes_a_day"</span>: <span class="n">30</span>}\n<span class="k">plan</span> = build_course(you)\n\n<span class="b">print</span>(plan[<span class="n">0</span>])\n<span class="cm"># Session 1: what a computer does,</span>\n<span class="cm">#   files, the terminal</span>\n<span class="b">print</span>(plan[-<span class="n">1</span>])\n<span class="cm"># Session '+Math.ceil(LESSONS.reduce((a,l)=>a+l.min,0)/30)+': your finished project</span></code></pre></section>'
+  +'<div class="facts">'
+  +'<div><h3>It starts from zero</h3><p>Lesson one explains what a computer does. No background assumed, and no jargon left unexplained.</p></div>'
+  +'<div><h3>It adapts to you</h3><p>Already comfortable with variables or loops? The questions find that, and those lessons drop out of your plan.</p></div>'
+  +'<div><h3>It ends with a project</h3><p>'+LESSONS.length+' short lessons, about '+fmtMin(LESSONS.reduce((a,l)=>a+l.min,0))+' of reading and practice, finishing with a small program you built yourself.</p></div>'
+  +'</div>';
+}
+
+function vProfile(){
+  const exps=[['none','I have never written code'],['some','I\'ve tried a bit (tutorials, copy and paste)'],['other','I code in another language']];
+  const goals=[['web','Build websites and apps'],['data','Analyse data'],['auto','Automate boring tasks'],['ai','Work with AI'],['explore','Just exploring']];
+  return '<div class="qwrap"><h2 class="t">Two quick things first</h2><p class="muted">These help us shape your plan. Neither is graded.</p>'
+  +'<h3 class="s" style="margin-top:26px">Where are you starting?</h3><div class="chips">'
+  +exps.map(e=>'<button class="chip" data-a="exp" data-v="'+e[0]+'" aria-pressed="'+(S.exp===e[0])+'">'+e[1]+'</button>').join('')+'</div>'
+  +'<h3 class="s">What do you want Python for?</h3><div class="chips">'
+  +goals.map(g=>'<button class="chip" data-a="goal" data-v="'+g[0]+'" aria-pressed="'+(S.goal===g[0])+'">'+g[1]+'</button>').join('')+'</div>'
+  +'<div class="panel" style="background:var(--yellow-soft);border-color:var(--yellow)"><strong class="fam">A tip for the questions:</strong> choose <em>I don\'t know yet</em> whenever you are unsure. Guessing would skip lessons you need, and an honest answer makes the plan better.</div>'
+  +'<div class="cta-row" style="margin-top:24px"><button class="btn" data-a="beginquiz" '+(S.exp?'':'disabled')+'>Start the questions</button></div></div>';
+}
+
+function vQuiz(){
+  const i=V.qi,p=PLACEMENT[i],total=PLACEMENT.length;
+  return '<div class="qwrap"><div class="qmeta"><span>Question '+(i+1)+' of '+total+'</span><span>'+TN[p.t]+'</span></div>'
+  +'<div class="bar" style="width:100%"><span style="width:'+(i/total*100)+'%"></span></div>'
+  +'<div class="qtext">'+inline(p.q)+'</div>'
+  +(p.code?codeBlock(p.code,'py'):'')
+  +'<div class="opts">'+p.o.map((o,k)=>'<button class="opt" data-a="opt" data-i="'+k+'"><span class="ix">'+'ABCD'[k]+'</span><span>'+inline(o)+'</span></button>').join('')
+  +'<button class="opt dunno" data-a="opt" data-i="-1">I don\'t know yet</button></div>'
+  +(i>0?'<p style="margin-top:20px"><button class="link" data-a="qback">Back</button></p>':'')+'</div>';
+}
+
+function paceCalc(){
+  const ids=V.replan?remainingIds():activeIds();
+  const pk=pack(ids,S.minutes);
+  const total=ids.reduce((a,id)=>a+LBY[id].min,0);
+  const dates=pk.length?sessionDates(pk.length,S.perWeek,todayIso()):[];
+  return{ids,pk,total,last:dates[dates.length-1]};
+}
+function vSetup(){
+  const skippable=TOPICS.filter(t=>t.skip);
+  const pc=paceCalc();
+  const answered=Object.keys(S.answers).length>0;
+  let intro;
+  if(V.replan)intro='<p class="muted">Adjust your pace. Your finished lessons stay finished, and the remaining ones get re-split.</p>';
+  else if(!answered)intro='<p class="muted">You chose to start from the beginning. You can still mark any module below as already known.</p>';
+  else{
+    const right=PLACEMENT.filter(p=>S.answers[p.id]===p.a).length;
+    intro='<p>You answered <strong>'+right+' of '+PLACEMENT.length+'</strong> correctly. '
+      +(S.skip.length?'We\'ll skip the modules you clearly know, and you can adjust that here.':'We\'ll start at the beginning so nothing is missing. That\'s a perfectly good place to be.')+'</p>';
+  }
+  return '<div class="narrow"><h2 class="t">'+(V.replan?'Change your pace':'Build your plan')+'</h2>'+intro
+  +'<div class="panel" style="margin-top:20px"><h3 class="s">Modules I already know</h3>'
+  +skippable.map(t=>'<label class="check"><input type="checkbox" data-a="togskip" data-t="'+t.id+'" '+(S.skip.includes(t.id)?'checked':'')+'><span><strong class="fam">'+t.name+'</strong><br><span class="muted" style="font-size:.95rem">'+LESSONS.filter(l=>l.topic===t.id).map(l=>l.title).join(', ')+'</span></span></label>').join('')
+  +'</div>'
+  +'<div class="panel"><h3 class="s">How much time can you give each session?</h3><div class="chips">'
+  +[20,30,45,60,90,120].map(m=>'<button class="chip" data-a="minutes" data-v="'+m+'" aria-pressed="'+(S.minutes===m)+'">'+(m>=60?(m/60)+(m===60?' hour':' hours'):m+' min')+'</button>').join('')+'</div>'
+  +'<h3 class="s">How many days a week?</h3><div class="chips" style="margin-bottom:6px">'
+  +[[3,'3 days (Mon, Wed, Fri)'],[5,'5 days (weekdays)'],[7,'Every day']].map(d=>'<button class="chip" data-a="perweek" data-v="'+d[0]+'" aria-pressed="'+(S.perWeek===d[0])+'">'+d[1]+'</button>').join('')+'</div></div>'
+  +'<div class="panel"><h3 class="s">Your plan</h3>'
+  +(pc.pk.length?'<div class="summary"><div><b>'+pc.pk.length+'</b><span>sessions</span></div><div><b>'+fmtMin(pc.total)+'</b><span>of learning in total</span></div><div><b>'+fmtDate(pc.last)+'</b><span>estimated finish if you start today</span></div></div>':'<p>Nothing left to schedule. You have finished every active lesson.</p>')
+  +'</div>'
+  +'<div class="cta-row" style="margin-top:22px"><button class="btn" data-a="build" '+(pc.pk.length?'':'disabled')+'>'+(V.replan?'Update my plan':'Start my course')+'</button>'
+  +(V.replan?'<button class="btn ghost" data-a="plan">Cancel</button>':'')+'</div></div>';
+}
+
+function sessionState(s,idx,nextIdx){
+  const all=s.every(id=>S.done[id]);
+  return all?'done':(idx===nextIdx?'now':'todo');
+}
+function vPlan(){
+  const ids=activeIds();const done=ids.filter(i=>S.done[i]);
+  const doneMin=done.reduce((a,i)=>a+LBY[i].min,0),totMin=ids.reduce((a,i)=>a+LBY[i].min,0);
+  const plan=S.plan||[];
+  const dates=sessionDates(Math.max(plan.length,1),S.perWeek,S.start||todayIso());
+  let nextIdx=plan.findIndex(s=>!s.every(id=>S.done[id]));
+  let html='<div>';
+  if(nextIdx===-1){
+    html+='<div class="win"><h3>You finished the whole course.</h3><p>Every lesson and the capstone are done. Keep the momentum: pick a library from the paths lesson, and start your next small project this week.</p></div>';
+  }else{
+    const s=plan[nextIdx];const mins=s.reduce((a,id)=>a+LBY[id].min,0);
+    html+='<div class="next"><div><span class="fam muted" style="color:inherit;opacity:.8">Up next · '+fmtDate(dates[nextIdx])+' · about '+fmtMin(mins)+'</span><h2>Session '+(nextIdx+1)+'</h2><p>'+s.map(id=>LBY[id].title).join(' · ')+'</p></div><button class="btn" data-a="opensession" data-n="'+nextIdx+'">'+(s.some(id=>S.done[id])?'Continue session':'Start session')+'</button></div>';
+  }
+  html+='<div class="stats"><div><b>'+done.length+' / '+ids.length+'</b><span>lessons finished</span></div><div><b>'+fmtMin(Math.max(totMin-doneMin,0))+'</b><span>left to go</span></div><div><b>'+S.minutes+' min</b><span>per session, '+(S.perWeek===7?'every day':S.perWeek+' days a week')+'</span></div></div>';
+  html+='<div class="sessions">'+plan.map((s,i)=>{
+    const st=sessionState(s,i,nextIdx);const mins=s.reduce((a,id)=>a+LBY[id].min,0);
+    return '<button class="srow" data-a="opensession" data-n="'+i+'"><span class="sn">Session '+(i+1)+'<span class="sd">'+fmtDate(dates[i])+'</span></span>'
+     +'<ul>'+s.map(id=>'<li class="'+(S.done[id]?'done':'')+'">'+LBY[id].title+' <span class="muted">('+LBY[id].min+' min)</span></li>').join('')+'</ul>'
+     +'<span class="state '+st+'">'+(st==='done'?'Done':st==='now'?'Next':fmtMin(mins))+'</span></button>';
+  }).join('')+'</div>';
+  const sk=LESSONS.filter(l=>!l.always&&S.skip.includes(l.topic));
+  if(sk.length)html+='<details class="skipped"><summary>Skipped because you know them ('+sk.length+' lessons)</summary><ul>'+sk.map(l=>'<li><button class="link" data-a="openlesson" data-id="'+l.id+'">'+l.title+'</button></li>').join('')+'</ul><p class="muted" style="font-size:.95rem">Open any of them for a refresher. You can also change your choices under Change pace.</p></details>';
+  html+='<div class="tools"><button class="btn ghost small" data-a="replan">Change pace</button><button class="btn ghost small" data-a="retake">Retake the questions</button>'
+   +(V.confirm?'<span class="fam">Erase all progress? <button class="link" data-a="reset">Yes, erase</button> · <button class="link" data-a="cancelreset">No</button></span>':'<button class="btn ghost small" data-a="askreset">Start over</button>')+'</div></div>';
+  return html;
+}
+
+function qBlock(key,q,label){
+  const pick=S.picks[key];const has=pick!==undefined;
+  return '<div class="check-block" style="border-top:0;padding-top:0;margin-top:14px"><div class="qtext">'+inline(q.q)+'</div>'+(q.code?codeBlock(q.code,'py'):'')
+  +'<div class="opts">'+q.o.map((o,k)=>{
+    let cls='opt';if(has&&k===pick)cls+=k===q.a?' ok':' bad';
+    return '<button class="'+cls+'" data-a="pick" data-k="'+key+'" data-i="'+k+'"><span class="ix">'+'ABCD'[k]+'</span><span>'+inline(o)+'</span></button>';
+  }).join('')+'</div>'
+  +(has?'<div class="fb '+(pick===q.a?'ok':'bad')+'" role="status"><strong>'+(pick===q.a?'Correct. ':'Not quite. ')+'</strong>'+inline(pick===q.a?q.w:'Have another look. '+q.w)+'</div>':'')+'</div>';
+}
+
+function lessonHTML(l,ctx){
+  const isDone=!!S.done[l.id];
+  let html='<article class="lesson" id="L-'+l.id+'"><p class="mod">'+l.mod+'</p><h2>'+l.title+'</h2><span class="time">About '+l.min+' minutes, practice included</span><div class="prose" style="margin-top:18px">'+md(l.body)+'</div>';
+  if(l.id==='m4'){
+    const extra={web:'**Your goal, web:** start with Flask or FastAPI. Build a tiny page or API that returns your to-do list as JSON.',data:'**Your goal, data:** install Jupyter and pandas (or Polars), load a CSV file of something you care about, and draw one chart.',auto:'**Your goal, automation:** write a script that tidies a messy folder by file type, using ~pathlib~.',ai:'**Your goal, AI:** learn NumPy first, then try scikit-learn, and later call an AI model API from a small script.',explore:'**Your goal, exploring:** keep it playful. Try a small game with pygame or a text adventure with ~match~.'}[S.goal];
+    html+='<div class="tip">'+inline(extra)+'</div>';
+  }
+  html+='<div class="check-block"><h3 class="s">Check yourself</h3>'+l.checks.map((q,i)=>qBlock(ctx+':'+l.id+':'+i,q)).join('')+'</div>';
+  if(l.task){
+    const k=ctx+':sol:'+l.id;
+    html+='<div class="task"><h3>Practice</h3><p style="margin:0">'+inline(l.task).replace(/\n/g,'<br>')+'</p>'
+    +(l.sol?'<p style="margin:12px 0 0"><button class="btn ghost small" data-a="togsol" data-k="'+k+'">'+(S.open[k]?'Hide sample solution':'Show sample solution')+'</button></p>'+(S.open[k]?'<p class="muted" style="margin:10px 0 0;font-size:.95rem">Try it yourself first. Yours can look different and still be right.</p>'+codeBlock(l.sol,'py'):''):'')
+    +'</div>';
+  }
+  html+='<div class="donebar"><button class="btn'+(isDone?' ghost':'')+'" data-a="done" data-id="'+l.id+'">'+(isDone?'Finished. Undo':'Mark this lesson finished')+'</button>'+(isDone?'<span class="fam" style="color:var(--green);font-weight:700">Lesson complete</span>':'')+'</div></article>';
+  return html;
+}
+
+function warmup(n,session){
+  const pool=[];
+  for(const l of LESSONS){
+    if(!S.done[l.id]||session.includes(l.id))continue;
+    l.checks.forEach((q,i)=>pool.push({l:l,q:q,i:i}));
+  }
+  if(pool.length<2)return '';
+  const a=pool[(n*5+1)%pool.length];let b=pool[(n*5+4)%pool.length];
+  if(b===a)b=pool[(n*5+2)%pool.length];
+  return '<section class="warm"><h3 class="s">Warm-up: two questions from earlier</h3><p class="muted" style="margin:0 0 4px;font-size:.98rem">Recalling what you learned is what makes it stick.</p>'
+   +[a,b].map(p=>qBlock('w'+n+':'+p.l.id+':'+p.i,p.q)).join('')+'</section>';
+}
+
+function vSession(){
+  const n=V.n,s=S.plan[n];
+  if(!s)return vPlan();
+  const dates=sessionDates(S.plan.length,S.perWeek,S.start||todayIso());
+  const mins=s.reduce((a,id)=>a+LBY[id].min,0);
+  const allDone=s.every(id=>S.done[id]);
+  let html='<div class="narrow" style="max-width:820px"><p class="crumbs"><button class="link" data-a="plan">My plan</button> / Session '+(n+1)+' of '+S.plan.length+'</p>'
+  +'<h2 class="t">Session '+(n+1)+'</h2><p class="muted fam">'+fmtDate(dates[n])+' · about '+fmtMin(mins)+' · '+s.length+' lesson'+(s.length>1?'s':'')+'</p>';
+  html+=warmup(n,s);
+  html+=s.map(id=>lessonHTML(LBY[id],'s')).join('');
+  if(allDone){
+    const last=n===S.plan.length-1;
+    html+='<div class="win"><h3>'+(last?'Course complete.':'Session complete.')+'</h3><p>'+(last?'You built a real program and learned the foundations of Python. Be proud of that.':'Nice work. Come back for the next session and start with its warm-up. Rest is part of learning.')+'</p><button class="btn" data-a="plan">Back to my plan</button></div>';
+  }
+  return html+'</div>';
+}
+function vLesson(){
+  const l=LBY[V.id];
+  return '<div class="narrow" style="max-width:820px"><p class="crumbs"><button class="link" data-a="plan">My plan</button> / Refresher</p>'+lessonHTML(l,'r')+'</div>';
+}
+
+function render(keep){
+  const y=window.scrollY;
+  let html;
+  switch(V.name){
+    case 'home':html=vHome();break;
+    case 'profile':html=vProfile();break;
+    case 'quiz':html=vQuiz();break;
+    case 'setup':html=vSetup();break;
+    case 'plan':html=vPlan();break;
+    case 'session':html=vSession();break;
+    case 'lesson':html=vLesson();break;
+    default:html=vHome();
+  }
+  $app.innerHTML=html;
+  renderMini();
+  window.scrollTo(0,keep?y:0);
+}
+
+/* ============ EVENTS ============ */
+document.addEventListener('click',function(e){
+  const t=e.target.closest('[data-a]');if(!t)return;
+  const a=t.dataset.a;
+  switch(a){
+    case 'home':go(S.plan?'plan':'home');break;
+    case 'plan':V.replan=false;go('plan');break;
+    case 'start':go('profile');break;
+    case 'brandnew':S.answers={};S.skip=[];save();V.replan=false;go('setup');break;
+    case 'exp':S.exp=t.dataset.v;save();update();break;
+    case 'goal':S.goal=t.dataset.v;save();update();break;
+    case 'beginquiz':S.answers={};V.qi=0;go('quiz');break;
+    case 'opt':{
+      const p=PLACEMENT[V.qi];S.answers[p.id]=parseInt(t.dataset.i,10);save();
+      if(V.qi<PLACEMENT.length-1){V.qi++;render(false)}
+      else{S.skip=computeSkip();save();V.replan=false;go('setup')}
+      break;}
+    case 'qback':if(V.qi>0){V.qi--;render(false)}break;
+    case 'togskip':{
+      const id=t.dataset.t;
+      S.skip=S.skip.includes(id)?S.skip.filter(x=>x!==id):S.skip.concat(id);save();update();break;}
+    case 'minutes':S.minutes=parseInt(t.dataset.v,10);save();update();break;
+    case 'perweek':S.perWeek=parseInt(t.dataset.v,10);save();update();break;
+    case 'build':{
+      const ids=V.replan?remainingIds():activeIds();
+      S.plan=pack(ids,S.minutes);S.start=todayIso();V.replan=false;save();go('plan');break;}
+    case 'opensession':V.n=parseInt(t.dataset.n,10);go('session');break;
+    case 'openlesson':V.id=t.dataset.id;go('lesson');break;
+    case 'pick':S.picks[t.dataset.k]=parseInt(t.dataset.i,10);save();update();break;
+    case 'togsol':S.open[t.dataset.k]=!S.open[t.dataset.k];save();update();break;
+    case 'done':S.done[t.dataset.id]=!S.done[t.dataset.id];save();update();break;
+    case 'replan':V.replan=true;go('setup');break;
+    case 'retake':S.answers={};V.qi=0;V.replan=false;go('profile');break;
+    case 'askreset':V.confirm=true;update();break;
+    case 'cancelreset':V.confirm=false;update();break;
+    case 'reset':S=defaults();save();V.replan=false;go('home');break;
+  }
+});
+render(false);
+</script>
+</body>
+</html>
